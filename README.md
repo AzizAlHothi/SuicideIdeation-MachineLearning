@@ -31,3 +31,114 @@ The top 20 features were also revealing. Odd features that stood out were the nu
 
 #### Note 3.4: A Look at Logistic Regression Classifier
 Logistic Regression classifier has the upperhand not only in generic accuracy methods, but in avoiding the errors that are most harmful for this purpose of this project (Type I: False negatives).
+
+
+# Unsupervised Learning
+
+In the second part of this project, I will employ unsupervised learning models (K-means and LDA) to reveal what topics and subtexts are featured the most in the sample of reddit posts. 
+
+## K-Means 
+### Determining the number of clusters
+
+by graphing the Mean Squared Error (MSE) for the number of clusters, we will be able to find the optimal number of clusters by finding the number of clusters which most significantly reduces the MSE. This is also known as the Elbow Method. (Based on the image below , 5 clusters were chosen). 
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/fb6ad3fb-7cca-47fc-9eac-e36847869dff" />
+
+### Evaluating the K-means results 
+Using the following evaluation methods, we determined the efficacy (or lack thereof) of the k-means in this specific application: 
+NMI Score:          0.0071
+Homogeneity Score:  0.0109
+Completeness Score: 0.0053
+V-measure Score:    0.0071
+
+### K-means Verdict
+The metric results are subpar (very close to zero). Furthermore, the topics identified did not help us separate the two topics (suicidewatch and depression). This is normal considering the linguistic closeness we observed earlier in this pipeline
+
+## LDA
+The pyLDAvis package was used on this sample. The coherence score was calculated to determine the optimal number of topics (K) (12 topics were selected)
+
+<img width="696" height="493" alt="image" src="https://github.com/user-attachments/assets/e69a7dbd-8bab-4d0a-8176-c9ae7caad34d" />
+
+using the pyLDAvis package , a map with two principal components is visualized to illustrate the distance between the clusters of topics across the two axes (lambda is set 1).
+
+<img width="1179" height="745" alt="image" src="https://github.com/user-attachments/assets/fb71aaff-4225-4a47-8eb3-d55971aa7f70" />
+
+## LDA Vs. K-means (in this application)
+
+--- Comparing K-Means and LDA Clustering Metrics (vs Ground Truth) ---
+
+K-Means Metrics:
+  NMI Score:          0.0071
+  Homogeneity Score:  0.0109
+  Completeness Score: 0.0053
+  V-measure Score:    0.0071
+
+LDA Metrics (based on dominant topic):
+  NMI Score:          0.0528
+  Homogeneity Score:  0.1103
+  Completeness Score: 0.0347
+  V-measure Score:    0.0528
+
+## Unsupervised model verdict
+### Quantitatively Speaking 
+The Adjust Rand score BARELY outscores the k - means method , but still better. However, I ran the entire evaluation to compare both k-means and LDA model from evaluation metrics presented in class , and LDA beats k-Means on every metric. 
+
+### Qualitatively Speaking
+Since the topics in the LDA model were much more coherent and made sense for exploration, I will use the LDA topics over the k-Means. I will run a code chunk below to measure the dominant topic in each document (reddit post) and then look at the distribution of classes across topics and determine which topics are salient in suicide labels. This will allow for a more qualitative approach to identifying and dileneating suicide ideation in text. 
+
+LDA wins this part of the pipeline.
+
+
+<img width="1175" height="786" alt="image" src="https://github.com/user-attachments/assets/28ee4994-a9bc-4c01-87bd-564bc1582ef9" />
+
+--- Topic Legend ---
+Topic 1: Suicidal Thoughts and Urge to Die
+Topic 2: Family Conflict and Parental Struggles
+Topic 3: Clinical Depression and Medication Management
+Topic 4: Philosophical Reflections and Meaning of Life
+Topic 5: Seeking Help and Suicidal Ideation
+Topic 6: Timeline of Struggles and Personal History
+Topic 7: Loneliness and Interpersonal Relationships
+Topic 8: Body Image and Perceptual Pain
+Topic 9: Explosive Anger and Despair
+Topic 10: Hopelessness and Desire to Escape Life
+Topic 11: Emotional Turmoil and Confusion
+Topic 12: Academic and Work-Related Stress
+
+# Results and Discussion
+
+With this new dataset, it seems that the separation is becoming harder and harder to achieve with two very close topics in concept (depression and suicide). Let's first review the unsupervised learning section to uncover which topics seem to divide the two topics 
+
+## Unsupervised Learning Dileneating Topics
+
+1. Topic 2: Family Trauma and Parental Struggles (~63% SuicideWatch)
+
+This topic achieves above 50% of being relevant in dileneating suicidewatch posts from depression, which could point to the depth of a family trauma and isolation dominant topic in a text. 
+
+2. Topic 1: Suicidal Thoughts and Urge to Die (85% SuicideWatch)
+
+Not a surprising outcome , proves as a good sanity check for my model. 
+
+3. Topic 10: Hopelessness and Desire to Escape Life (73% SuicideWatch)
+
+Not a surprising outcome , although people with MDD can also express this emotion. This seems to be very latent in suicidewatch-listed posts. 
+
+4. Topic 9: Explosive Anger and Despair (73% SuicideWatch)
+
+It seems that anger and outrage , combined with suicidal thoughts, seem to give the sense of urgency and seriousness that the person is considering to end their life. 
+
+5. Topic 7: Lineliness and interpesonal relations (75% Depression)
+
+Also not surprising, as people with depression will express isolation and mental health struggles with their family more pronouncely than posts listed on suicidewatch. 
+
+6. Topic 3: Clinical Depression and Medication Management (71% Depression)
+
+A good sanity check for our model
+
+
+
+# Conclusion
+the unsupervised topic modeling added valuable depth to my understanding of the latent structures within the data. Specifically, it helped reveal nuanced patterns that might not be immediately apparent from class labels alone—such as the unexpected clustering of existential reflection and academic stress more heavily within depression posts, and the distinct presence of rage and family trauma in suicide-related texts.
+
+This insight suggests that unsupervised learning can serve as a powerful complementary tool—not just for exploratory analysis but also for improving classification pipelines. By incorporating topic proportions or topic-informed features into my supervised models, I may be able to better capture semantic context, ultimately enhancing both overall accuracy and, more importantly, recall. This matters critically in this domain, as improving recall helps reduce the risk of false negatives (Type II errors), which is essential in a mental health detection setting where missing high-risk posts could have serious consequences.
+
+In future iterations, I plan to explore hybrid models that combine topic-based embeddings with classification, allowing for more context-aware and interpretable predictions.
