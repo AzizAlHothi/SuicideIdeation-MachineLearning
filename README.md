@@ -1,6 +1,6 @@
-# SuicideIdeation-MachineLearning
+# Machine Learning Model to explore Suicide Ideation and Depression posts online
 A project featuring a pipeline of supervised and unsupervised machine learning model aimed at understanding the language that delineates suicide ideation posts from general depression posts online.
-# Suicide Detection Project
+### Quick Background
 This is Abdulaziz AlHothi's project of building a machine learning model that can improve suicide detection through lingual indications on social media. The [dataset](https://https://www.kaggle.com/datasets/nikhileswarkomati/suicide-watch) (specifically Cleaned Suicidewatch Vs. Depression) imported into this project draws texts from SuicideWatch reports and depression forums , classing them into two different classes "SuicideWatch" and "Depression".
 
 
